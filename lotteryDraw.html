@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit">
+    <!--为了让 IE 浏览器运行最新的渲染模式下-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>抽奖界面</title>
+    <script>
+        let scale = 1.0 / window.devicePixelRatio;
+        let text =`<meta name="viewport" content="width=device-width, initial-scale=${scale},maximum-scale=${scale},minimum-scale=${scale},user-scalable=${scale}">`;
+        document.write(text);
+        document.documentElement.style.fontSize = window.innerWidth / 7.5 + 'px';
+    </script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet/less" href="css/lotteryDraw.less">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <p class="popular">活动人气<span>0</span></p>
+        <p class="userNumber">参与人数<span>0</span></p>
+        <p class="allPlayTimes">博饼次数<span>0</span></p>
+    </div>
+    <div class="main-picture">
+        <div class="person-profile">
+            <img src="images/example.png" alt="">
+        </div>
+    </div>
+    <div class="person-info">
+        方剑鹏
+    </div>
+    <p class="tips">您有1次抽奖机会，快翻牌子吧!</p>
+    <div class="lottery-draw-area">
+        <ul class="area-in">
+            <li>
+                <p class="front"></p>
+                <p class="back"></p>
+            </li>
+            <li>
+                <p class="front"></p>
+                <p class="back"></p>
+            </li>
+            <li>
+                <p class="front"></p>
+                <p class="back"></p>
+            </li>
+        </ul>
+    </div>
+    <div class="prize">
+        <div class="prize-left">
+            <span>奖品信息：</span>
+        </div>
+        <div class="prize-right">
+            <img src="images/prize.png" alt="">
+        </div>
+    </div>
+    <p class="footer">@copyright活动方拥有最终解释权</p>
+    <div class="submit-area">
+        <div class="submit-area-in">
+            <p>恭喜你</p>
+            <p>获得山图礼包!</p>
+            <p>填写信息即可领取</p>
+            <p>
+                <span>姓名：</span>
+                <input type="text" class="userName" placeholder="请填写姓名">
+            </p>
+            <p>
+                <span>手机号：</span>
+                <input type="text" class="phone" placeholder="请填写手机号码">
+            </p>
+            <p>
+                <span>地址：</span>
+                <input type="text" class="address" placeholder="请填写地址">
+            </p>
+            <p>请自己保证信息真实有效</p>
+            <p>否则礼包无法寄出!</p>
+            <p class="submit">提交</p>
+            <span class="close-submit-area"></span>
+        </div>
+    </div>
+</div>
+<script src="js/less.js"></script>
+<script src="js/jquery-1.12.4.js"></script>
+<script type="text/html">
+    let oImg = $('.area-in li img');
+    for (let i = 0;i < oImg.length;i++){
+        oImg[i].onclick = function () {
+            //给当前点击的图片添加类名，让图片旋转
+            $(this).addClass('rotate');
+            //将所有图片的点击事件置为null
+            for (let j = 0; j < oImg.length;j++){
+                oImg[j].onclick = null;
+                setTimeout(function () {
+                    $(oImg[j]).addClass('rotate');
+                },1500);
+            }
+        }
+    }
+</script>
+<script>
+
+    let uId = localStorage.getItem('uId');
+    //一进来就getUserInfo并且初始化用户信息
+    $.ajax({
+        type:'get',
+        url:`http://47.93.24.43:9090/getUserInfo/${uId}`,
+        success(res){
+            // console.log(res.data);
+            //将参数传给初始化的函数
+            initUserInfo(res.data);
+        },
+        error(msg){
+            console.log(msg);
+        }
+    });
+
+    //一进来就发送请求getGameInfo
+    $.ajax({
+        type:'GET',
+        url:'http://47.93.24.43:9090/getGameInfo',
+        success(res) {
+            initGameInfo(res.data);//初始化游戏信息
+        },
+        error(msg) {
+            console.log(msg);
+        }
+    });
+
+    //拿到GameInfo初始化数据
+    function initGameInfo(obj) {
+        let userNumber = obj.userNumber;//参与人数
+        let allPlayTimes = obj.number;//总博饼次数
+        let userNumberSpan = $('.userNumber>span');
+        let allPlayTimesSpan = $('.allPlayTimes>span');
+        let popularSpan = $('.popular>span');
+        //初始化参与人数
+        if (Number(userNumber) > 1000){
+            if (Number(userNumber) > 10000){
+                userNumberSpan.text('1w+');
+            }
+            userNumberSpan.text('999+');
+        } else{
+            userNumberSpan.text(userNumber);
+        }
+
+        //初始化总博饼次数
+        if (Number(allPlayTimes) > 1000){
+            if (Number(allPlayTimes) > 10000){
+                allPlayTimesSpan.text('1w+');
+            }
+            allPlayTimesSpan.text('999+');
+        } else{
+            allPlayTimesSpan.text(allPlayTimes);
+        }
+
+        //初始化活动人气（活动人气的计算：参与人数 + 55）
+        if (Number(userNumber) > 1000){
+            if (Number(userNumber) > 10000){
+                popularSpan.text('1w+');
+            }
+            popularSpan.text('999+');
+        } else{
+            popularSpan.text(userNumber);
+        }
+
+    }
+
+    //拿到UserInfo初始化数据
+    function initUserInfo(obj) {
+        // console.log(obj);
+        let userName = obj.userName;//用户微信名称
+        let userPicture = obj.userPicture;//用户头像
+        let number = obj.number;//用户排名
+        let remainingNumber = obj.remainingNumber;//剩余博饼次数
+        let points = obj.points;//用户积分
+
+        //初始化用户微信名称
+        $('.person-info').text(userName);
+        //初始化用户头像
+        $('.person-profile>img').attr('src',userPicture);
+        //初始化用户积分
+        $('.person-score>span').text(points);
+        //初始化用户剩余博饼次数
+        $('.times>span').text(remainingNumber);
+    }
+
+    //拿到area-in里面的li
+    let oLis = $('.area-in>li');
+
+    //如果抽过奖了就不能点击了
+    if (Number(getCookie('drawed')) === 1){
+        //将提示的文字修改
+        $('.tips').text('已经抽过奖了!');
+    } else{
+        //遍历li添加点击事件
+        for (let i = 0;i < oLis.length;i++){
+            oLis[i].onclick = function () {
+                let self = $(this);//保存点击的卡片
+                console.log('点击的卡片',self);
+                //先将tips的文字换掉
+                $('.tips').text('没有抽奖机会咯!');
+                let no = $(this).index() + 1;//no为用户选中的牌的下标    1、2、3
+                let uId = localStorage.getItem('uId');
+                //发请求
+                $.post('http://47.93.24.43:9090/luckGame',{
+                    no:no,
+                    uId:uId
+                },function (obj) {
+                    //保存cookie第二天过期
+                    setCookie('drawed','1');
+                    function setCookie(name,value) {
+                        //先获取当天的时间对象，加一天，然后将时间设置为00:00:00
+                        let ctuskytime=new Date();
+                        ctuskytime.setDate( ctuskytime.getDate()+1);
+                        ctuskytime.setHours(0);
+                        ctuskytime.setMinutes(0);
+                        ctuskytime.setSeconds(0);
+                        document.cookie=`${name}=${value};expires=`+ctuskytime.toGMTString();
+                    }
+                    // console.log('请求发送成功返回的信息',obj);
+                    // console.log('中奖的卡片',obj.data);
+                    // console.log('用户选中的卡片',no);
+                    if (no === obj.data){
+                        //中奖的情况
+                        // console.log('中奖啦');
+                        $('.submit-area').css('display','block');
+                        self.children('.back').text('山图红酒');
+                    }else{
+                        //没有中奖
+                        // console.log('没中奖');
+                        self.children('.back').text('谢谢参与');
+                        // let arr = ['山图红酒','谢谢参与'];
+                        // console.log('点击的卡片',self);
+                        // console.log('其余两个卡片',self.siblings('li'));
+                        self.siblings('li').each(function (index,value) {
+                            //将其余两个卡片的点击事件设置为null
+                            value.onclick = null;
+                            //设置文字
+                            if (index === 0){
+                                $(value).children('.back').text('山图红酒');
+                            } else{
+                                $(value).children('.back').text('谢谢参与');
+                            }
+                            //随后，其余两张卡片自动翻转
+                            setTimeout(function () {
+                                $(value).addClass('flipped');
+                            },1500);
+                        })
+                    }
+                },'json');
+
+
+
+                /* //点击的显示'谢谢参与'
+                 $(this).children('.back').text('谢谢参与');
+                 //当点击了某一个卡片的时候，先把其他两个卡片的click事件置为null
+                 $(this).siblings('li').each(function (index,value) {
+                     if (index === 0){
+                         $(value).children('.back').text('谢谢参与');
+                     } else{
+                         let arr = ['山图葡萄酒','大容量背包','智能保温杯'];
+                         let randomIndex = parseInt(Math.random()*3);
+                         $(value).children('.back').text(arr[randomIndex]);
+                     }
+                     //将其余两个卡片的点击事件设置为null
+                     value.onclick = null;
+                     //随后，其余两张卡片自动翻转
+                     setTimeout(function () {
+                         $(value).addClass('flipped');
+                     },1500)
+                 });*/
+
+
+                //翻转li实现卡片翻转
+                $(this).addClass('flipped');
+            }
+        }
+    }
+
+
+    //点击提交按钮后提交信息
+    console.log(uId);
+    $('.submit').click(function () {
+        let userName = $('.userName').val();
+        let phone = $('.phone').val();
+        let address = $('.address').val();
+        $.post('http://47.93.24.43:9090/addAddress',{
+            uId:uId,
+            userName:userName,
+            phone:phone,
+            address:address
+        },function (data) {
+            console.log(data);
+        },'json');
+        //关闭提交面板
+        $('.submit-area').css('display','none');
+    });
+
+
+    //点击关闭按钮关闭提交面板
+    $('.close-submit-area').click(function () {
+        $('.submit-area').css('display','none');
+    });
+
+
+    //获取cookie
+    function getCookie(key) {
+        let res = document.cookie.split(';');
+        for (let i = 0; i < res.length; i++) {
+            let temp = res[i].split('=');
+            if (temp[0].trim() === key) {
+                return temp[1];
+            }
+        }
+    }
+</script>
+<script>
+    //改造后的share函数
+    share();
+    function share(){
+        let url = encodeURIComponent(window.location.href.split('#')[0]);
+        //定义变量保存后台返回的参数
+        let timestamp;
+        let nonceStr;
+        let signature;
+        //请求后台接口，拿到config要的参数
+        $.ajax({
+            type:'POST',
+            url:'http://47.93.24.43:9090/signature',
+            data:{
+                url:url
+            },
+            success(res){
+                console.log(res);
+                timestamp = res.timestamp;
+                nonceStr = res.nonceStr;
+                signature = res.signature;
+                test(timestamp,nonceStr,signature);
+            },
+            error(msg){
+                console.log(msg.status);
+            }
+        });
+
+        function test(timestamp,nonceStr,signature) {
+            //1.通过config接口注入权限验证配置
+            wx.config({
+                debug: false,
+                appId: 'wxd5b035d4ee6d7941',
+                timestamp:timestamp ,
+                nonceStr:nonceStr ,
+                signature: signature,
+                jsApiList: ['updateAppMessageShareData','updateTimelineShareData']//朋友、朋友圈
+            });
+
+            //2.通过ready接口处理成功验证
+            wx.ready(function(){
+                // let sharePersonUid = localStorage.getItem('uId');
+                //自定义分享给朋友的链接
+                wx.updateAppMessageShareData({
+                    title: '博饼游戏-王中王挑战赛', // 分享标题
+                    desc: '点击链接一起来博饼', // 分享描述
+                    link: `http://xuptdata.com/index.html`,
+                    imgUrl: '', // 分享的图标
+                    success: function () {
+                        // 设置成功
+                    }
+                })
+            });
+        }
+    }
+
+</script>
+
+</body>
+</html>

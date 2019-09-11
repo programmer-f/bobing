@@ -1,0 +1,241 @@
+html,body{
+  width: 100%;
+  height: auto;
+  background-color: #eee;
+}
+.container{
+  width: 100%;
+  height: 100%;
+  .header{
+    width: 100%;
+    height: 50/100rem;
+    background-color: #222;
+    display: flex;
+    display:-webkit-box;
+    display:-webkit-flex;
+    p{
+      flex:1;
+      -webkit-box-flex:1;
+      font-size: 30/100rem;
+      color: #fff;
+      text-align: center;
+      line-height: 50/100rem;
+      span{
+        color: #fc0000;
+        margin-left: 10/100rem;
+      }
+      border-right: 1px solid #fff;
+      p:last-child{
+        border-right: none;
+      }
+    }
+  }
+  .main-picture{
+    width: 100%;
+    //height: 425/100rem;
+    height: 375/100rem;
+    background: #ccc url("./../images/bg.png") no-repeat;
+    background-size:cover;
+    position: relative;
+    .person-profile{
+      width: 110/100rem;
+      height: 110/100rem;
+      background-color: #fff;
+      position: absolute;
+      bottom: -110/100rem;
+      left: 50%;
+      transform:translateX(-50%);
+      border-radius:50%;
+      img{
+        width: 100%;
+        height: 100%;
+        border-radius:50%;
+      }
+    }
+  }
+  .person-info{
+    height: 80/100rem;
+    margin-top: 100/100rem;
+    //background-color: skyblue;
+    text-align: center;
+    font-size: 40/100rem;
+    line-height: 80/100rem;
+    color: #fc1e33;
+    &:after{
+      display: inline-block;
+      content: "";
+      height: 1px;
+      width: 70/100rem;
+      background-color: #fc1e33;
+      position: relative;
+      top: -13/100rem;
+      left: 10/100rem;
+    }
+    &:before{
+      display: inline-block;
+      content: "";
+      height: 1px;
+      width: 70/100rem;
+      background-color: #ce0128;
+      position: relative;
+      top: -13/100rem;
+      right: 10/100rem;
+    }
+  }
+  .tips{
+    font-size: 35/100rem;
+    text-align: center;
+    margin-bottom: 10/100rem;
+  }
+  .lottery-draw-area{
+    width: 700/100rem;
+    height: 350/100rem;
+    //background-color: skyblue;
+    border: 1px solid #000;
+    margin: 0 auto;
+    .area-in{
+      width: 650/100rem;
+      height: 300/100rem;
+      line-height: 300/100rem;
+      //background-color: pink;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform:translate(-50%,-50%);
+      display: flex;
+      justify-content: space-between;
+      display:-webkit-box;
+      display:-webkit-flex;
+      -webkit-justify-content: space-between;
+      perspective: 800px;//增加的
+      li{
+        width: 32%;
+        height: 100%;
+        //background-color: yellow;
+        position: relative;//增加的
+        transform-style: preserve-3d;//增加的
+        transition: transform 1s;//增加的
+         p{//增加的
+          position: absolute;//增加的
+          width: 100%;//增加的
+          height: 100%;//增加的
+          backface-visibility: hidden;//增加的
+          color: #fff;//增加的
+           font-size: 30/100rem;
+           text-align: center;
+          &.front{
+            //background: red url("../testImages/animal1.png") no-repeat;
+            background: red url("../images/poker.jpg") no-repeat;
+            background-size:cover;
+          }
+          &.back{
+            //background: blue url("../testImages/animal2.png") no-repeat;
+            background: rgb(206,1,40);
+            //background-size:cover;
+            transform: rotateY( 180deg );
+          }
+        }//增加的
+        /*img{
+          width: 100%;
+          height: 100%;
+          transition: 1.5s;
+        }*/
+      }
+    }
+  }
+  .prize{
+    padding: 25/100rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: 240/100rem;
+    font-size: 35/100rem;
+    overflow: hidden;
+    //background-color: lightgreen;
+   .prize-left{
+     width: 200/100rem;
+     height: 200/100rem;
+     float: left;
+   }
+    .prize-right{
+      width: 200/100rem;
+      height: 206/100rem;
+      float: left;
+      img{
+        height: 190/100rem;
+      }
+
+    }
+  }
+  .footer{
+    width: 100%;
+    height: 70/100rem;
+    line-height: 70/100rem;
+    font-size: 30/100rem;
+    background-color: #222;
+    color: #eee;
+    text-align: center;
+  }
+  .flipped {//增加的
+    transform: rotateY( 180deg );//增加的
+  }//增加的
+  .submit-area{
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.3);
+    .submit-area-in{
+      width: 600/100rem;
+      height: 600/100rem;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform:translate(-50%,-50%);
+      background-color: #eee;
+      border-radius:10/100rem;
+      padding-top: 50/100rem;
+      box-sizing: border-box;
+      p{
+        font-size: 30/100rem;
+        text-align: center;
+        color: #000;
+        //margin-top: 20/100rem;
+        &:nth-child(4){
+          margin-top: 30/100rem;
+          text-align: left;
+        }
+        &:nth-child(5){
+          margin-top: 30/100rem;
+          text-align: left;
+        }
+        &:nth-child(6){
+          margin-top: 30/100rem;
+          margin-bottom: 30/100rem;
+          text-align: left;
+        }
+        span{
+          display: inline-block;
+          width: 150/100rem;
+          text-align: right;
+        }
+        &.submit{
+          border: 1px solid #000;
+          width: 100/100rem;
+          margin: 20/100rem auto;
+        }
+      }
+      .close-submit-area{
+        display: inline-block;
+        width: 40/100rem;
+        height: 40/100rem;
+        position: absolute;
+        top: 20/100rem;
+        right: 20/100rem;
+        background: deepskyblue url("../images/close.png") no-repeat;
+        background-size:40/100rem 40/100rem;
+      }
+    }
+  }
+}

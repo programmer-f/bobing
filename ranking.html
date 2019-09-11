@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit">
+    <!--为了让 IE 浏览器运行最新的渲染模式下-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>积分排行榜</title>
+    <script>
+        let scale = 1.0 / window.devicePixelRatio;
+        let text =`<meta name="viewport" content="width=device-width, initial-scale=${scale},maximum-scale=${scale},minimum-scale=${scale},user-scalable=${scale}">`;
+        document.write(text);
+        document.documentElement.style.fontSize = window.innerWidth / 7.5 + 'px';
+    </script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet/less" href="css/ranking.less">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <p class="popular">活动人气<span>0</span></p>
+        <p class="userNumber">参与人数<span>0</span></p>
+        <p class="allPlayTimes">博饼次数<span>0</span></p>
+    </div>
+    <p class="chart"><i class="iconfont icon-wujiaoxing"></i>积分排行榜</p>
+    <p class="person-ranking">您目前排名第<span>0</span>名</p>
+    <p class="warm-notice">活动结束后前30名可以填写信息，有机会获得王中王挑战赛入场券！</p>
+    <p class="activity-notification"></p>
+    <ul class="ranking-list">
+        <!--
+        <li>
+            <div class="person-number">1</div>
+            <div class="person-image">
+                <img src="images/example.png" alt="">
+            </div>
+            <div class="person-name">方剑鹏</div>
+            <div class="person-score">302</div>
+        </li>
+        -->
+    </ul>
+    <div class="console-area">
+        <button class="to-play">去博饼</button>
+        <button class="to-personInfo">填写信息</button>
+    </div>
+    <p class="footer">@copyright活动方拥有最终解释权</p>
+</div>
+<div class="infoMask">
+    <div class="infoMask-in">
+            <p class="des">填写信息未开放，等活动结束后再来填写信息吧!</p>
+            <p class="close-infoMask">我知道了</p>
+    </div>
+</div>
+
+<script src="js/less.js"></script>
+<script src="js/jquery-1.12.4.js"></script>
+<script src="js/template-web.js"></script>
+<!--定义一个js模版-->
+<script id="test" type="text/html">
+    <% for(let i = 0;i < data.length;i++){ %>
+    <li>
+        <div class="person-number"><%=i+1 %></div>
+        <div class="person-image">
+            <img src="<%=data[i].userPicture %>" alt="">
+        </div>
+        <div class="person-name"><%=data[i].userName %></div>
+        <div class="person-score"><%=data[i].points %></div>
+    </li>
+    <% } %>
+</script>
+<script src="js/ranking.js"></script>
+<script>
+    //getPointsList
+    $.ajax({
+        type:'GET',
+        url:'http://47.93.24.43:9090/getPointsList',
+        success(res){
+            initPointsList(res);
+        },
+        error(msg) {
+            console.log(msg);
+        }
+    });
+    //拿到PointsList后初始化排行榜
+    function initPointsList(obj) {
+        // console.log(obj.data);
+        //用js模版来填充排行榜
+        let rankingList = document.querySelector('.ranking-list');
+        // let html = template('test',obj);
+        // rankingList.innerHTML = html;
+        rankingList.innerHTML = template('test',obj);
+    }
+</script>
+
+</body>
+</html>

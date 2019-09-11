@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit">
+    <!--为了让 IE 浏览器运行最新的渲染模式下-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>分享助力</title>
+    <script>
+        let scale = 1.0 / window.devicePixelRatio;
+        let text =`<meta name="viewport" content="width=device-width, initial-scale=${scale},maximum-scale=${scale},     minimum-scale=${scale},user-scalable=${scale}">`;
+        document.write(text);
+        document.documentElement.style.fontSize = window.innerWidth / 7.5 + 'px';
+    </script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet/less" href="css/help.less">
+</head>
+<body>
+<div class="container">
+    <div class="header">为我助力</div>
+    <div class="poster">
+        <div class="poster-top">
+            <img class="sharePersonPicture" src="images/example.png" alt="">
+            <div class="top-right">
+                <p class="sharePersonName">初始账号</p>
+                <p>累积积分：<span class="sharePersonScore">0</span></p>
+            </div>
+        </div>
+        <div class="poster-bottom"></div>
+    </div>
+    <p class="help"></p>
+    <p class="button2">
+        <!--<a href="index.html">我也要博饼</a>-->
+        <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd5b035d4ee6d7941&redirect_uri=http%3A%2F%2Fxuptdata.com%2Findex.html&response_type=code&scope=snsapi_userinfo&state=abcd#wechat_redirect">我也要博饼</a>
+    </p>
+    <p class="tips">没有博饼过的小伙伴，先去博饼才有助力资格!</p>
+    <p class="button1">
+        <a class="help-button">帮TA助力</a>
+    </p>
+</div>
+
+<script src="js/less.js"></script>
+<script src="js/jquery-1.12.4.js"></script>
+<script>
+
+
+
+    //判断助力人有没有授权
+    if (localStorage.getItem('uId')){
+        //已经授权过了，拿到分享人的uId之后，直接助力
+        //拿到分享人的uId
+        // console.log(window.location.href);
+        let url = window.location.href;
+        let sharePersonUid = getSharePersonUid(url);
+        //保存分享人的uId
+        localStorage.setItem('sharePersonUid',sharePersonUid);
+
+        //拿到分享人的信息，渲染页面
+        $.ajax({
+            type:'get',
+            url:`http://47.93.24.43:9090/getUserInfo/${sharePersonUid}`,
+            success(res){
+                //将参数传给初始化的函数
+                initSharePersonInfo(res.data);
+            },
+            error(msg){
+                console.log(msg.status);
+            }
+        });
+
+        //点击为TA助力按钮，发送助力请求
+        $('.help-button').click(function () {
+            let uId = localStorage.getItem('sharePersonUid');
+            let fId = localStorage.getItem('uId');
+            //自己不能给自己助力
+            // if (uId === fId){
+            //     $('.header').text('自己不能给自己助力!').css('color','#f00');
+            //     return;
+            // }
+            //发送请求到助力接口
+            $.ajax({
+                type:'POST',
+                url:'http://47.93.24.43:9090/help',
+                data:{
+                    uId:uId,
+                    fId:fId
+                },
+                success(res) {
+                   // alert(res.code);
+                    let resCode = res.code;
+                    if (Number(resCode) === -1){
+                        $('.header').text('已经给好友助力过了!').css('color','#f00');
+                    } else if (Number(resCode) === -2){
+                        $('.header').text('自己不能给自己助力!').css('color','#f00');
+                    } else if (Number(resCode) === -3){
+                        $('.header').text('今天助力以达上限!').css('color','#f00');
+                    }else{
+                        //将header里面的文字替换为助力成功
+                        $('.header').text('助力成功!').css('color','#00BFFF');
+                    }
+                },
+                error(msg){
+                    $('.header').text('助力请求发送失败!').css('color','#f00');
+                }
+            })
+        })
+
+    }
+    else{
+        if (Number(localStorage.getItem('hrefTimes')) === 1){
+
+            //1.从url中截取code
+            let code = strToObj(window.location.href);
+            console.log('code是:',code);
+            function strToObj(str) {
+                if (str.includes('?')){
+                    let arr = str.split('?');
+                    let res = arr[1];
+                    let arr2 = res.split('&');
+                    let res2 = arr2[0];
+                    let arr3 = res2.split('=');
+                    return arr3[1];
+                } else{
+
+                }
+            }
+
+
+            //获取自己的uId，然后助力
+            console.log('第一次发送code');
+            //uId不存在，向后端发送请求拿到uId并存储在localStorage里
+            $.ajax({
+                type:'GET',
+                url:`http://47.93.24.43:9090/access_token?code=${code}`,
+                success(res){
+                    localStorage.setItem("uId", res.uId);//将uId用localStorage存储
+                    // window.uId = localStorage.getItem('uId');//绑定到window上
+                   //点击助力按钮后，请求助力接口助力
+                    $('.help-button').click(function () {
+                        let uId = localStorage.getItem('sharePersonUid');//分享人的
+                        let fId = localStorage.getItem('uId');//助力人的
+
+                        //自己不能给自己助力
+                        if (uId === fId){
+                            $('.header').text('自己不能给自己助力!').css('color','#f00');
+                            return;
+                        }
+
+                        //发送请求到助力接口
+                        $.ajax({
+                            type:'POST',
+                            url:'http://47.93.24.43:9090/help',
+                            data:{
+                                uId:uId,
+                                fId:fId
+                            },
+                            success(res) {
+                                console.log('助力成功');
+                                console.log(res);
+                                //将header里面的文字替换为助力成功
+                                $('.header').text('助力成功!').css('color','#00bfff');
+                            },
+                            error(msg){
+                                //将header里面的文字替换为助力失败
+                                $('.header').text('助力失败!').css('color','#f00');
+                                console.log(msg.status);
+                                // alert(msg.msg);
+                            }
+                        })
+                    });
+                },
+                error(msg){
+                    console.log(msg.status);
+                }
+            });
+        }
+        else if(Number(localStorage.getItem('hrefTimes')) == null){
+            //记录跳转的次数
+            localStorage.setItem('hrefTimes','1');
+            // alert('已经存储了跳转次数');
+
+            //没有授权，先缓存分享人的uId，然后跳转到授权页面
+            //拿到分享人的uId
+            console.log(window.location.href);
+            // alert(window.location.href);//http://xuptdata.com/help.html?sharePersonUid=${sharePersonUid}
+            let url = window.location.href;
+
+            let sharePersonUid = getSharePersonUid(url);
+            //保存分享人的uId
+            localStorage.setItem('sharePersonUid',sharePersonUid);
+
+            //跳转到授权页面
+            window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd5b035d4ee6d7941&redirect_uri=http%3A%2F%2Fxuptdata.com%2Fhelp.html&response_type=code&scope=snsapi_userinfo&state=abcd#wechat_redirect';
+        }
+    }
+
+
+    //渲染分享人信息的函数
+    function initSharePersonInfo(obj){
+        let sharePersonName = obj.userName;//用户微信名称
+        let sharePersonPicture = obj.userPicture;//用户头像
+        let sharePersonScore = obj.points;//用户积分
+
+
+        //初始化分享人的信息
+        $('.sharePersonName').text(sharePersonName);
+        $('.sharePersonPicture').attr('src',sharePersonPicture);
+        $('.sharePersonScore').text(sharePersonScore);
+    }
+    //获取分享人uId的函数
+    function getSharePersonUid (url) {
+        let splitUrlArr = url.split("?");
+        let newArr = splitUrlArr[1].split('&');
+        let newArr2 = newArr[0].split('=');
+        // alert(newArr2[1]);
+        return newArr2[1];
+    }
+
+</script>
+</body>
+</html>

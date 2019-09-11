@@ -1,0 +1,25 @@
+/*可以将常用的工具类放在base.css中*/
+
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+.clearfix::after{
+    /*设置添加的子元素内容为空*/
+    content: "";
+    /*设置添加的子元素为块级元素*/
+    display: block;
+    /*设置添加的子元素高度为0*/
+    height: 0;
+    /*设置添加的子元素的显示模式为隐藏*/
+    visibility: hidden;
+    /*清除浮动*/
+    clear: both;
+}
+/*兼容IE6*/
+.clearfix{
+    *zoom:1;
+}
+

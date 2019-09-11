@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit">
+    <!--为了让 IE 浏览器运行最新的渲染模式下-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>登记个人信息</title>
+    <script>
+        let scale = 1.0 / window.devicePixelRatio;
+        let text =`<meta name="viewport" content="width=device-width, initial-scale=${scale},maximum-scale=${scale},     minimum-scale=${scale},user-scalable=${scale}">`;
+        document.write(text);
+        document.documentElement.style.fontSize = window.innerWidth / 7.5 + 'px';
+    </script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet/less" href="css/personInfo.less">
+</head>
+<body>
+<div class="container">
+    <h1>恭喜获得排行榜第<span class="userRankingNumber"></span>名</h1>
+    <div class="description">
+        <p>*&nbsp;填写个人信息&nbsp;*</p>
+        <p>即可获得王中王挑战赛入场券</p>
+    </div>
+    <div class="form-area">
+        <p>请保证信息的有效性!</p>
+            <p>
+                <span>姓名&nbsp;</span>
+                <input type="text" class="userName" placeholder="请填写真实姓名">
+            </p>
+            <p>
+                <span>手机号&nbsp;</span>
+                <input type="text" class="phone" placeholder="请填写手机号">
+            </p>
+            <p>
+                <span>地址&nbsp;</span>
+                <input type="text" class="address" placeholder="请填写地址">
+            </p>
+            <p>
+                <span class="submit">提交信息</span>
+            </p>
+
+    </div>
+</div>
+
+<script src="js/less.js"></script>
+<script src="js/jquery-1.12.4.js"></script>
+<script src="js/personInfo.js"></script>
+</body>
+</html>

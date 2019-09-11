@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--可以让部分国产浏览器默认采用高速模式渲染页面-->
+    <meta name="renderer" content="webkit">
+    <!--为了让 IE 浏览器运行最新的渲染模式下-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>博饼游戏-王中王大奖赛</title>
+    <script>
+        let scale = 1.0 / window.devicePixelRatio;
+        let text =`<meta name="viewport" content="width=device-width, initial-scale=${scale},maximum-scale=${scale},minimum-scale=${scale},user-scalable=${scale}">`;
+        document.write(text);
+        document.documentElement.style.fontSize = window.innerWidth / 7.5 + 'px';
+    </script>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="fonts/iconfont.css">
+    <link rel="stylesheet/less" href="css/index.less">
+    <!--引入微信的开发包-->
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <p class="popular">活动人气<span>0</span></p>
+        <p class="userNumber">参与人数<span>0</span></p>
+        <p class="allPlayTimes">博饼次数<span>0</span></p>
+    </div>
+    <div class="main-picture">
+            <p class="showAndHide"><span class="person-name"></span>刚刚获得红酒一瓶</p>
+            <div class="person-profile">
+                <img src="images/example.png" alt="">
+            </div>
+    </div>
+    <div class="person-info">
+        初始账号
+    </div>
+    <p class="person-score">我的积分：<span>0</span></p>
+    <div class="game">
+        <div class="game-area">
+            <p class="playResultInfo"></p>
+            <ul class="ul0">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+            </ul>
+            <ul class="ul1">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+            </ul>
+            <ul class="ul2">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+            </ul>
+            <ul class="ul3">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+            </ul>
+            <ul class="ul4">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+            </ul>
+            <ul class="ul5">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+                <li>6</li>
+            </ul>
+            <p class="tips">点击按钮开始博饼吧</p>
+        </div>
+    </div>
+    <p class="times">今日剩余次数：<span>0</span>次</p>
+    <div class="play">
+        <button class="game-play-btn">博&nbsp;&nbsp;&nbsp;&nbsp;饼</button>
+        <!--<button class="game-play-btn">活动已结束</button>-->
+        <span class="show-rules">活动规则</span>
+    </div>
+    <!--<p class="to-chart"><i class="iconfont icon-wujiaoxing"></i>查看积分排行榜</p>-->
+    <p class="to-chart">积分排行榜</p>
+    <p class="footer">@copyright活动方拥有最终解释权</p>
+</div>
+<!--游戏规则-->
+<div class="mask">
+    <div class="rules">
+        <div class="rules-content">
+            <p><span>1</span>每个微信用户进入专区，每天可参与3次免费博饼</p>
+            <p><span>2</span>每天3次博饼机会用完后，可通过分享给其他微信好友，请好友在分享页面点击助力，来获得额外的博饼机会，助力获得的博饼机会，最高限5次；</p>
+            <p><span>3</span>每次博饼结果，可获得不同的直通总决赛奖励积分，积分可累加。最终，活动结束时，总积分排名前30的用户，可获得在厦门举办的总决赛直通券，现场参与赢取宝马车的博饼活动；</p>
+            <p><span>4</span>每位参与线上博饼互动的用户，当博完当天默认3次+请好友助力5次，共8次机会后，获得页面提示，参与幸运惊喜抽奖，可有机会抽取到山图葡萄酒1瓶；</p>
+            <p><span>5</span>活动的最终解释权由活动方所有</p>
+        </div>
+        <div class="close">
+            <span class="close-button">我知道了</span>
+        </div>
+    </div>
+</div>
+<!--去抽奖-->
+<div class="toLotteryDraw">
+        <div class="notification">
+            <p>今日博饼次数已使用完，送您一次抽奖机会</p>
+            <p class="goToLotteryDraw">去抽奖</p>
+            <span class="close-notification"></span>
+        </div>
+</div>
+<!--分享弹窗-->
+<div class="share">
+    <div class="share-in">
+        <p>今日免费博饼次数已使用，邀请5位好友助力，可获得5次额外博饼次数，快去<span style="color:deepskyblue">点击右上角</span>去分享吧!</p>
+        <p class="goToHelp">关闭后去分享</p>
+        <span class="close-share"></span>
+    </div>
+</div>
+
+<script src="js/less.js"></script>
+<script src="js/jquery-1.12.4.js"></script>
+<script src="js/index.js"></script>
+<script>
+
+    share();
+    //获取和配置分享接口的函数
+   function share(){
+       let url = encodeURIComponent(window.location.href.split('#')[0]);
+       //定义变量保存后台返回的参数
+       let timestamp;
+       let nonceStr;
+       let signature;
+       //请求后台接口，拿到config要的参数
+       $.ajax({
+           type:'POST',
+           url:'http://47.93.24.43:9090/signature',
+           data:{
+               url:url
+           },
+           success(res){
+               // console.log(res);
+               timestamp = res.timestamp;
+               nonceStr = res.nonceStr;
+               signature = res.signature;
+               test(timestamp,nonceStr,signature);
+           },
+           error(msg){
+               console.log(msg.status);
+           }
+       });
+       function test(timestamp,nonceStr,signature) {
+           //1.通过config接口注入权限验证配置
+           wx.config({
+               debug: false,
+               appId: 'wxd5b035d4ee6d7941',
+               timestamp:timestamp ,
+               nonceStr:nonceStr ,
+               signature: signature,
+               jsApiList: ['updateAppMessageShareData']
+           });
+           let sharePersonUid = localStorage.getItem('uId');
+           wx.ready(function () {
+               wx.updateAppMessageShareData({
+                   title: '帮忙助力，好运送你！', // 分享标题
+                   desc: '厦门广电+山图酒业 邀您博饼，全新宝马3系等你赢！', // 分享描述
+                   link: `http://xuptdata.com/help.html?sharePersonUid=${sharePersonUid}`,
+                   imgUrl: 'http://xuptdata.com/images/share.jpg', // 分享的图标
+                   success: function () {
+                       // 设置成功将面板关掉
+                       $('.share').css('display','none');
+                   }
+               })
+           });
+       }
+   }
+    //点击关闭后去分享要做的事情
+  $(".goToHelp").click(function () {
+      // 设置成功将面板关掉
+      $('.share').css('display','none');
+      let sharePersonUid = localStorage.getItem('uId');
+        wx.ready(function () {
+            wx.updateAppMessageShareData({
+                title: '帮忙助力，好运送你！', // 分享标题
+                desc: '厦门广电+山图酒业 邀您博饼，全新宝马3系等你赢！', // 分享描述
+                link: `http://xuptdata.com/help.html?sharePersonUid=${sharePersonUid}`,
+                imgUrl: 'http://xuptdata.com/images/share.jpg', // 分享的图标
+                success: function () {
+                    // 设置成功将面板关掉
+                     $('.share').css('display','none');
+                }
+            })
+        });
+  });
+  
+   //测试代码
+    //alert('活动已结束，如果您的积分在前30名，点击积分排行榜填写信息吧');
+
+</script>
+
+</body>
+</html>
